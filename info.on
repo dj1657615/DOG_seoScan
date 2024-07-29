@@ -1,0 +1,8 @@
+[User]
+id = djdj
+pw = 123
+save = t
+
+[Config]
+version = 0.00002
+
