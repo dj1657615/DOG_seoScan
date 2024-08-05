@@ -18,7 +18,7 @@ class Login(QMainWindow, login_Ui.Ui_LoginWindow):
     def __init__(self):
         QMainWindow.__init__(self)
         login_Ui.Ui_LoginWindow.__init__(self)
-        self.setWindowIcon(QIcon('resource/icons/trayIcon.png'))
+        self.setWindowIcon(QIcon('resource/trayIcon.png'))
         
         chromeAutoUpdate.update()
         
