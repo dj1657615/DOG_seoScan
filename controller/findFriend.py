@@ -334,17 +334,25 @@ class Thread(QtCore.QThread) :
                             break
                         time.sleep(0.005)
                         
-                    checkDrop = driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")[1]
-                    driver.execute_script("arguments[0].click();", checkDrop)
-                    time.sleep(0.5)
-                
+                    checkDrop = driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")[3]
+                    checkDrop.click()
+                    time.sleep(1)
                     self.deletePercent.emit(int(65))  
-                    driver.find_elements(By.CLASS_NAME, "checkAll")[0].click()
-                    driver.find_element(By.CLASS_NAME, "btn_del").click()
-                    driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
-                    self.deletePercent.emit(int(80)) 
                     
-                    # if len(index) == 0 :
+                    while True:
+                        neigborCount = driver.find_element(By.CLASS_NAME , "action2_r").find_element(By.CLASS_NAME , "fl").text
+                        neigborCount = neigborCount.replace("정렬된 이웃","").replace("명","").replace(" ","").strip()
+                        if int(neigborCount) == 0 :
+                            print("nonono")
+                            break
+                        
+                        driver.find_elements(By.CLASS_NAME, "checkAll")[0].click()
+                        time.sleep(1)
+                        driver.find_element(By.CLASS_NAME, "btn_del").click()
+                        time.sleep(1)
+                        driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
+                        self.deletePercent.emit(int(80)) 
+                    
                     self.deleteList.clear()
                     self.deletePercent.emit(int(100))
                     

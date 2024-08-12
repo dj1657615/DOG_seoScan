@@ -163,7 +163,7 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
            self.pwEdit.setReadOnly(False)
            self.btnSearchFollower.show()
            self.btnStop.hide()
-           self.currentFriendName.setText("이웃찾기가 안료되었습니다")
+           self.currentFriendName.setText("이웃찾기가 완료되었습니다")
            self.result_title.setText(f"이웃 : {len(self.noFriendAllList)} / 전체이웃 : {str(self.allFriend)}")
            
            if len(self.noFriendAllList) >0 :
