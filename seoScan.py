@@ -62,7 +62,7 @@ class Login(QMainWindow, login_Ui.Ui_LoginWindow):
             if(rest.login(**data)):
                 self.close()
                 self.main = MainWindow()
-                self.main.setWindowIcon(QIcon('resource/icons/trayIcon.png'))
+                self.main.setWindowIcon(QIcon('resource/trayIcon.png'))
                 self.main.show()
             else :
                 msgBox = QtWidgets.QMessageBox()

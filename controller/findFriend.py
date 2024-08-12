@@ -96,7 +96,7 @@ class Thread(QtCore.QThread) :
         except NoSuchElementException:
             print("error")       
         
-
+        
         url = "https://nid.naver.com/nidlogin.login?url=https%3A%2F%2Fsection.blog.naver.com%2FBlogHome.naver"
         driver.get(url)
        
@@ -329,8 +329,13 @@ class Thread(QtCore.QThread) :
                     
                 elif len(self.deleteList) > 1 :
                     
+                    while True :
+                        if len (driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")) > 0 :
+                            break
+                        time.sleep(0.005)
+                        
                     checkDrop = driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")[1]
-                    checkDrop.click()
+                    driver.execute_script("arguments[0].click();", checkDrop)
                     time.sleep(0.5)
                 
                     self.deletePercent.emit(int(65))  
