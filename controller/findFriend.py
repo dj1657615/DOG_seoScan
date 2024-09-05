@@ -92,7 +92,6 @@ class Thread(QtCore.QThread) :
         try :
             driver = webdriver.Chrome(service=service, executable_path=chrome_path, options=options, desired_capabilities=capabilities)
             driver.set_window_position(0,0)
-            # driver.set_window_position(-10000,10000) 
         except NoSuchElementException:
             print("error")       
         
@@ -139,10 +138,14 @@ class Thread(QtCore.QThread) :
                     break
         except NoSuchElementException:
             pass
-
-        driver.implicitly_wait(3)
-        driver.set_window_position(-10000,10000) 
         
+        while True :
+            if len( driver.find_elements(By.CLASS_NAME,"menu_my_article")) > 0 :
+                break
+            time.sleep(0.1)
+            
+        driver.set_window_position(-10000,10000) 
+        time.sleep(2)
         
         driver.find_element(By.CLASS_NAME,"menu_my_article").find_elements(By.TAG_NAME, "a")[2].click()
         driver.find_element(By.CLASS_NAME,"link_manage_buddy").click()
