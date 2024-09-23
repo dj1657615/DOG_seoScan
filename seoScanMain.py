@@ -55,22 +55,36 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
             self.progressBar.setValue(100)
         
      def startFindFriend(self) :
-        self.th_findFriend = findFriend.Thread(self)
-        self.th_findFriend.getAccount(self.idEdit.text(), self.pwEdit.text()) 
-        self.currentFriendName.setText("이웃찾기를 시작합니다... 잠시만 기다려주세요....")
-        
-        self.idEdit.setReadOnly(True)
-        self.pwEdit.setReadOnly(True)
-        self.btnSearchFollower.hide()
-        self.btnStop.show()
-        self.progressBar.setValue(5)
-        
-        self.th_findFriend.loginError.connect(self.errorUi)
-        self.th_findFriend.percent.connect(self.updateProcessPercent)
-        self.th_findFriend.name.connect(self.updateCurrentFriendName)
-        self.th_findFriend.start()
-        self.th_findFriend.dataReady.connect(self.updateTable)
-        self.th_findFriend.percent.connect(self.updateUi)
+         
+         if self.th_findFriend.isRunning():
+            self.th_findFriend.stopThread(True)
+         
+         self.th_findFriend = findFriend.Thread(self)
+         self.th_findFriend.getAccount(self.idEdit.text(), self.pwEdit.text()) 
+         self.currentFriendName.setText("이웃찾기를 시작합니다... 잠시만 기다려주세요....")
+         self.result_title.setText("")
+         
+         self.table.clear()
+         self.table.clearContents() 
+         self.table.setRowCount(0) 
+         self.noFriendList.clear()   
+         self.noFriendAllList.clear()
+         self.deleteIndexList.clear()
+         self.lastListSize = 0       
+         self.table.setHorizontalHeaderLabels(['그룹명', '상태', '이웃명', '최근글', '이웃추가일', '삭제'])
+         
+         self.idEdit.setReadOnly(True)
+         self.pwEdit.setReadOnly(True)
+         self.btnSearchFollower.hide()
+         self.btnStop.show()
+         self.progressBar.setValue(5)
+         
+         self.th_findFriend.loginError.connect(self.errorUi)
+         self.th_findFriend.percent.connect(self.updateProcessPercent)
+         self.th_findFriend.name.connect(self.updateCurrentFriendName)
+         self.th_findFriend.start()
+         self.th_findFriend.dataReady.connect(self.updateTable)
+         self.th_findFriend.percent.connect(self.updateUi)
      
  
            
@@ -170,11 +184,11 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
                self.btnAllDelete.show()
      
      def onCellDoubleClicked(self, row, column):
-        print("click")
-        print(row)
+        # print("click")
+        # print(row)
         if self.processValue == 100 :
             if column == 5:  
-                  print("0k")           
+                  # print("0k")           
                   second_column_value = self.table.item(row, 2).text() 
                   self.showDeleteConfirm(row, second_column_value, "one")
                
@@ -197,12 +211,12 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
          if type == "one" and row is not None:
                self.noFriendList.append(name)
                self.deleteIndexList.append([row,name])
-               print("-------------------------")
-               print( self.deleteIndexList)
+               # print("-------------------------")
+               # print( self.deleteIndexList)
                self.th_findFriend.getDeleteList(self.noFriendList)
                self.th_findFriend.deletePercent.connect(self.deleteFriendRowUpdate)
                
-               print(name)
+               # print(name)
          elif type == "all":
                if len(self.noFriendAllList) > 0 :
                   self.th_findFriend.getDeleteList(self.noFriendAllList)
@@ -220,20 +234,20 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
       
       count = 0
       
-      print("-----------111111111111--------------")
-      print( len(self.deleteIndexList))
-      print(self.lastListSize)
-      print( self.deleteIndexList)
-      print( value)
+      # print("-----------111111111111--------------")
+      # print( len(self.deleteIndexList))
+      # print(self.lastListSize)
+      # print( self.deleteIndexList)
+      # print( value)
       
       if value == 100 :   
          if len(self.deleteIndexList) > 0 :
-            print("-----------33333333333333333--------------")
+            # print("-----------33333333333333333--------------")
             
-            print(len(self.deleteIndexList))
-            print(self.lastListSize)
+            # print(len(self.deleteIndexList))
+            # print(self.lastListSize)
             
-            print(self.deleteIndexList)
+            # print(self.deleteIndexList)
             
             if len(self.deleteIndexList) > self.lastListSize :
                lastData = self.deleteIndexList[-1]
@@ -242,21 +256,21 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
                print (row)
                self.table.removeRow(int(row))
                self.deleteIndexList = self.deleteIndexList[:-1]
-               print(self.deleteIndexList)
+               # print(self.deleteIndexList)
                self.lastListSize -1
                self.table.repaint()   
                
             else :   
-               print("-----------22222--------------")
+               # print("-----------22222--------------")
                for row in self.deleteIndexList:
                   
-                  print("-----------333333--------------")
+                  # print("-----------333333--------------")
                   if count == len(self.deleteIndexList) :
                      break
                   for rowCount in range(self.table.rowCount()):
                      
                      if str(row[1]).strip() == self.table.item(rowCount, 2).text() :
-                        print("innnnnnnnnnnn")
+                        # print("innnnnnnnnnnn")
                         self.table.removeRow(rowCount)
                         self.btnAllDelete.hide() 
                         count+=1
@@ -293,4 +307,4 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
            
          if e.key() in [Qt.Key_Return, Qt.Key_Enter] :
             self.startFindFriend()  
-            print("enter") 
+            # print("enter") 

@@ -97,8 +97,8 @@ while True :
     
     
     if len(deleteList) > 0 :
-                print("===============================")
-                print(deleteList)
+                # print("===============================")
+                # print(deleteList)
                 
                 driver.refresh() 
                 content = driver.find_element(By.ID, "papermain")
@@ -106,7 +106,7 @@ while True :
                 
                 driver.find_elements(By.CLASS_NAME, "selectbox-box")[2].click()
                 
-                print(page)
+                # print(page)
                 if page > 0 :
                     driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[page -1].click()
                 
@@ -116,27 +116,27 @@ while True :
                  
                 if len(deleteList) == 1 :
                         
-                        print("11111")
+                        # print("11111")
                         for item in index :
                             
-                            print("2222")
+                            # print("2222")
                             item_name = item.find_element(By.CLASS_NAME, "ellipsis2").text
                             
                             # print(item_name)
                             
-                            print(item_name.strip())
-                            print(str(deleteList[0]).strip())
-                            print(item_name.strip()== str(deleteList[0]).strip())
-                            print(item_name.strip()== (deleteList[0]).strip())
+                            # print(item_name.strip())
+                            # print(str(deleteList[0]).strip())
+                            # print(item_name.strip()== str(deleteList[0]).strip())
+                            # print(item_name.strip()== (deleteList[0]).strip())
                             if item_name.strip() == str(deleteList[0]).strip() :
                                 
-                                print("3333")
+                                # print("3333")
                                 item.find_element(By.CLASS_NAME, "checkwrap").find_element(By.TAG_NAME, "input").click()
                                 driver.find_element(By.CLASS_NAME, "btn_del").click()
                                 driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
                                 time.sleep(0.5)
                                 deleteList.clear()
-                                print("4444")
+                                # print("4444")
                                 break
                         page+=1    
                         

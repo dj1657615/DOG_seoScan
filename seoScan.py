@@ -13,6 +13,7 @@ import sys
 from caller import rest
 from controller import ui_controller
 from caller import chromeAutoUpdate
+import traceback
 
 class Login(QMainWindow, login_Ui.Ui_LoginWindow):
     def __init__(self):
@@ -57,7 +58,7 @@ class Login(QMainWindow, login_Ui.Ui_LoginWindow):
         ui_controller.userSaveInfo(self, cbSaveInfo, userId, userPw, version)
 
         data = {'userId':userId,'userPw':userPw}
-        print(rest)
+        # print(rest)
         try :
             if(rest.login(**data)):
                 self.close()
@@ -69,7 +70,8 @@ class Login(QMainWindow, login_Ui.Ui_LoginWindow):
                 msgBox.setText("올바른 계정정보를 입력해주세요     ")
                 msgBox.exec_()
         except Exception as e : 
-            print(e)
+            # print(e)
+            traceback.print_exc()
 
     def keyPressEvent(self, e): 
         if e.key() in [Qt.Key_Return, Qt.Key_Enter] :

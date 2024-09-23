@@ -23,3 +23,12 @@ controller/__pycache__/findFriend.cpython-312.pyc
 controller/__pycache__/ui_controller.cpython-312.pyc
 view/__pycache__/login_Ui.cpython-312.pyc
 view/__pycache__/main_Ui.cpython-312.pyc
+*.pyc
+*.pyc
+__pycache__/seoScanMain.cpython-312.pyc
+caller/__pycache__/chromeAutoUpdate.cpython-312.pyc
+caller/__pycache__/rest.cpython-312.pyc
+controller/__pycache__/findFriend.cpython-312.pyc
+controller/__pycache__/ui_controller.cpython-312.pyc
+view/__pycache__/login_Ui.cpython-312.pyc
+view/__pycache__/main_Ui.cpython-312.pyc

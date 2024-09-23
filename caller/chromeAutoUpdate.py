@@ -31,13 +31,13 @@ def get_chrome_version():
         if chromeCheck == None:
             pass
         elif chromeCheck:
-            print(chromeCheck)
+            # print(chromeCheck)
             now_chrome_version = chromeCheck
             return now_chrome_version
 
 def update() : 
     try:
-        print("In update")
+        # print("In update")
         try:
             os.remove(os.path.join(os.path.abspath('chromedriver.exe')))
         except FileNotFoundError:
@@ -45,13 +45,13 @@ def update() :
 
         now_version = get_chrome_version()
         download_page = "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_"+ now_version[:3]
-        print("test")
-        print(download_page)
+        # print("test")
+        # print(download_page)
         get_chromedownload = requests.get(download_page)
-        print("asdf")
-        print(get_chromedownload)
-        print(get_chromedownload.status_code)
-        print(get_chromedownload.text)
+        # print("asdf")
+        # print(get_chromedownload)
+        # print(get_chromedownload.status_code)
+        # print(get_chromedownload.text)
 
 
 
@@ -81,18 +81,18 @@ def update() :
 
             
         download_paths = os.path.join(os.path.abspath('chromedriver_win32.zip'))
-        print(download_url)
+        # print(download_url)
         download(download_url, download_paths)
         try :
             chromedriver_path = zipfile.ZipFile(os.path.join(os.path.abspath('chromedriver_win32.zip'))).extract('chromedriver.exe')
         except Exception as e : 
-            print(e)
+            # print(e)
             try :
                 chromedriver_path = zipfile.ZipFile(os.path.join(os.path.abspath('chromedriver_win32.zip'))).extract('chromedriver-win32/chromedriver.exe')
                 os.rename('./chromedriver-win32/chromedriver.exe','./chromedriver.exe')
                 os.rmdir('./chromedriver-win32')
             except Exception as e : 
-                print(e)
+                # print(e)
                 chromedriver_path = zipfile.ZipFile(os.path.join(os.path.abspath('chromedriver_win32.zip'))).extract('chromedriver_win32/chromedriver.exe')
                 os.rename('./chromedriver_win32/chromedriver.exe','./chromedriver.exe')
                 os.rmdir('./chromedriver_win32')

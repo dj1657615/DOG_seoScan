@@ -13,7 +13,7 @@ def login(**data):
             'id': data['userId'], 
             'pw': data['userPw'],
     }
-    print(body)
+    # print(body)
     try :
         response = requests.post(main_server + 'user/login/free', data  = body,timeout= 300)
         loginObject = json.loads(response.text)

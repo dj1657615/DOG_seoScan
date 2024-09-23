@@ -17,6 +17,7 @@ import clipboard
 import pandas as pd
 import math
 from subprocess import CREATE_NO_WINDOW
+import traceback
 
 
 
@@ -40,21 +41,21 @@ class Thread(QtCore.QThread) :
     dataReady = QtCore.pyqtSignal(list) 
     
     def run(self):
-            self.findFriend()
-            self._StopSignal.emit()
+        
+        self.findFriend()
             
     def getAccount(self, id, pw) :
-            self.naverId = id
-            self.naverPW = pw
+        self.naverId = id
+        self.naverPW = pw
             
     def getDeleteList(self, list) :
         self.deleteList = list      
     
     def stopThread(self, sign) :
-        self.stop = sign           
-
+        self.stop = sign       
+        
     def findFriend(self) :
-
+            
         groupName = []
         friendCheck = []
         friendName = []
@@ -88,13 +89,13 @@ class Thread(QtCore.QThread) :
         capabilities['goog:loggingPrefs'] = {'browser': 'ALL'} 
 
         chrome_path =  "chromedriver.exe"
-
+        
         try :
             driver = webdriver.Chrome(service=service, executable_path=chrome_path, options=options, desired_capabilities=capabilities)
             driver.set_window_position(0,0)
         except NoSuchElementException:
-            print("error")       
-        
+            # print("error")    
+            traceback.print_exc()
         
         url = "https://nid.naver.com/nidlogin.login?url=https%3A%2F%2Fsection.blog.naver.com%2FBlogHome.naver"
         driver.get(url)
@@ -144,7 +145,7 @@ class Thread(QtCore.QThread) :
                 break
             time.sleep(0.1)
             
-        driver.set_window_position(-10000,10000) 
+        driver.set_window_position(1000000,1000000) 
         time.sleep(2)
         
         driver.find_element(By.CLASS_NAME,"menu_my_article").find_elements(By.TAG_NAME, "a")[2].click()
@@ -165,22 +166,41 @@ class Thread(QtCore.QThread) :
         
         content = driver.find_element(By.ID, "papermain")
         driver.switch_to.frame(content)      
-          
+        
+        pageNateSize = 0
+        count = 0
+        self.stop = False
         while True:
+            
+            totalFriend = driver.find_element(By.CLASS_NAME, "action2_r").find_element(By.TAG_NAME, "strong").text
             
             if self.stop == True :
                 driver.quit()
                 self.percent.emit(int(100))
                 break
+            
+            # print("=---o-------------------------")
+            # print(totalFriend)
+            # print(count)
+            
+            if int(totalFriend) == count :
+                break
                 
-            pageSize = len(driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a"))
-
-            if page_num > 0 :
+            if pageNateSize > 0 :
                 try :  
-                    if pageSize < page_num :
-                        driver.refresh()
-                        break
-                    driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[page_num -1].click()
+                    # print("///////////////////////")
+                    # print(pageNateSize)
+                    # print(page_num)
+                    
+                            
+                    if page_num < 11  :
+                        if pageNateSize == 10 :
+                            pageNateSize = 0
+                        driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[pageNateSize -1].click()
+                    else :
+                        if pageNateSize == 11 :
+                            pageNateSize = 1
+                        driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[pageNateSize].click()
                     
                 except NoSuchElementException:
                     pass
@@ -190,9 +210,8 @@ class Thread(QtCore.QThread) :
             tbody  = items.find_element(By.TAG_NAME, "tbody")
             itemList  = tbody.find_elements(By.TAG_NAME, "tr")
             
-            totalFriend = driver.find_element(By.CLASS_NAME, "action2_r").find_element(By.TAG_NAME, "strong").text
             
-            print(f"--------------{page_num+1}페이지 이웃찾기 시작-------------")
+            # print(f"--------------{page_num+1}페이지 이웃찾기 시작-------------")
             
             friend_num = 0
             
@@ -271,19 +290,27 @@ class Thread(QtCore.QThread) :
                         raw_data['이웃추가일']))
                     
                 self.dataReady.emit(data_list) 
+                count += 1
 
             page_num += 1
+            pageNateSize += 1
             time.sleep(1)
         
         page = 0
         while True :
+
+            if self.stop == True :
+                # print("alreaduy----------------------------------------")
+                driver.quit()
+                break
+                
             if len(self.deleteList) > 0 :
                 if self.stop == True :
                     driver.quit()
                     self.percent.emit(int(100))
                     break
-                print("===============================")
-                print(self.deleteList)
+                # print("===============================")
+                # print(self.deleteList)
                 
                 driver.refresh() 
                 content = driver.find_element(By.ID, "papermain")
@@ -294,7 +321,7 @@ class Thread(QtCore.QThread) :
                 
                 self.deletePercent.emit(int(20))
                 
-                print(page)
+                # print(page)
                 if page > 0 :
                     driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[page -1].click()
                 
@@ -306,18 +333,18 @@ class Thread(QtCore.QThread) :
                 self.deletePercent.emit(int(50))    
                 if len(self.deleteList) == 1 :
                         
-                        print("11111")
+                        # print("11111")
                         self.deletePercent.emit(int(65))    
                         for item in index :
                             
-                            print("2222")
+                            # print("2222")
                             item_name = item.find_element(By.CLASS_NAME, "ellipsis2").text
                             
                             # print(item_name)
                             
                             if item_name.strip() == str(self.deleteList[0]).strip() :
                                 
-                                print("3333")
+                                # print("3333")
                                 self.deletePercent.emit(int(80)) 
                                 item.find_element(By.CLASS_NAME, "checkwrap").find_element(By.TAG_NAME, "input").click()
                                 driver.find_element(By.CLASS_NAME, "btn_del").click()
@@ -325,7 +352,7 @@ class Thread(QtCore.QThread) :
                                 time.sleep(0.5)
                                 self.deleteList.clear()
                                 self.deletePercent.emit(int(100))
-                                print("4444")
+                                # print("4444")
                                 break
                         page+=1    
                         
@@ -346,7 +373,7 @@ class Thread(QtCore.QThread) :
                         neigborCount = driver.find_element(By.CLASS_NAME , "action2_r").find_element(By.CLASS_NAME , "fl").text
                         neigborCount = neigborCount.replace("정렬된 이웃","").replace("명","").replace(" ","").strip()
                         if int(neigborCount) == 0 :
-                            print("nonono")
+                            # print("nonono")
                             break
                         
                         driver.find_elements(By.CLASS_NAME, "checkAll")[0].click()
