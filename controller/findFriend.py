@@ -55,338 +55,366 @@ class Thread(QtCore.QThread) :
         self.stop = sign       
         
     def findFriend(self) :
-            
-        groupName = []
-        friendCheck = []
-        friendName = []
-        lastPostTime = []
-        friendDay = []
-        page_num = 0
-        
-        id = self.naverId.strip()
-        pw = self.naverPW.strip()
-        
-        if not id :
-            return self.loginError.emit("error_noText")  
-            
-            
-        elif not pw :
-            return self.loginError.emit("error_noText")  
-            
-        options = webdriver.ChromeOptions()
-
-        options.add_argument("--disable-dev-shm-usage")
-        options.add_argument("--remote-allow-origins=*")
-        options.add_argument("--disable-blink-features=AutomationControlled")
-        options.add_argument("--window-size=2000,1000")
-        options.add_argument("--disable-gpu")
-        options.add_argument(
-                "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
-        service = Service()
-        service.creation_flags = CREATE_NO_WINDOW
-
-        capabilities = webdriver.DesiredCapabilities.CHROME
-        capabilities['goog:loggingPrefs'] = {'browser': 'ALL'} 
-
-        chrome_path =  "chromedriver.exe"
         
         try :
-            driver = webdriver.Chrome(service=service, executable_path=chrome_path, options=options, desired_capabilities=capabilities)
-            driver.set_window_position(0,0)
-        except NoSuchElementException:
-            # print("error")    
-            traceback.print_exc()
-        
-        url = "https://nid.naver.com/nidlogin.login?url=https%3A%2F%2Fsection.blog.naver.com%2FBlogHome.naver"
-        driver.get(url)
-       
-        clipboard.copy(id)
-        time.sleep(0.5)
-        id_field = driver.find_element(By.ID,"id")
-        id_field.send_keys(Keys.CONTROL + "v")
-        time.sleep(0.5)
-
-        clipboard.copy(pw)
-        time.sleep(0.5)
-        pw_field = driver.find_element(By.ID,"pw")
-        pw_field.send_keys(Keys.CONTROL + "v")
-        time.sleep(0.5)
-        
-        errorElement = driver.find_element(By.CLASS_NAME,"login_error_wrap").get_attribute("style")
-        try:
-             if errorElement == "display: block" :
-        
-                self.loginError.emit("error_account")  
-                driver.quit()
-        except NoSuchElementException:
-            pass    
-        
-        try:
-            driver.find_element(By.CLASS_NAME,"btn_login_wrap").click()
-        except NoSuchElementException:
-            pass
-        
-        try:
-            driver.find_element(By.CLASS_NAME,"btn_upload").find_element(By.TAG_NAME, "a").click()
-        except NoSuchElementException:
-            pass
-        
-        try:
-            while True:
-                driver.find_element(By.CLASS_NAME,"login_check").find_element(By.CLASS_NAME, "check_row").click()
-                time.sleep(5)
-                if driver.find_element(By.CLASS_NAME,"_buddy_dropdown_container") :
-                    break
-        except NoSuchElementException:
-            pass
-        
-        while True :
-            if len( driver.find_elements(By.CLASS_NAME,"menu_my_article")) > 0 :
-                break
-            time.sleep(0.1)
             
-        driver.set_window_position(1000000,1000000) 
-        time.sleep(2)
+            groupName = []
+            friendCheck = []
+            friendName = []
+            lastPostTime = []
+            friendDay = []
+            page_num = 0
+            
+            id = self.naverId.strip()
+            pw = self.naverPW.strip()
+            
+            if not id :
+                return self.loginError.emit("error_noText")  
+                
+                
+            elif not pw :
+                return self.loginError.emit("error_noText")  
+                
+            options = webdriver.ChromeOptions()
+
+            options.add_argument("--disable-dev-shm-usage")
+            options.add_argument("--remote-allow-origins=*")
+            options.add_argument("--disable-blink-features=AutomationControlled")
+            options.add_argument("--window-size=2000,1000")
+            options.add_argument("--disable-gpu")
+            options.add_argument(
+                    "user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36")
+            service = Service()
+            service.creation_flags = CREATE_NO_WINDOW
+
+            capabilities = webdriver.DesiredCapabilities.CHROME
+            capabilities['goog:loggingPrefs'] = {'browser': 'ALL'} 
+
+            chrome_path =  "chromedriver.exe"
+            
+            try :
+                driver = webdriver.Chrome(service=service, executable_path=chrome_path, options=options, desired_capabilities=capabilities)
+                driver.set_window_position(0,0)
+            except NoSuchElementException:
+                # print("error")    
+                traceback.print_exc()
+            
+            url = "https://nid.naver.com/nidlogin.login?url=https%3A%2F%2Fsection.blog.naver.com%2FBlogHome.naver"
+            driver.get(url)
         
-        driver.find_element(By.CLASS_NAME,"menu_my_article").find_elements(By.TAG_NAME, "a")[2].click()
-        driver.find_element(By.CLASS_NAME,"link_manage_buddy").click()
-        
-        driver.switch_to.window(driver.window_handles[-1])
-        
-        
-        beforeScrollY = driver.execute_script("return window.scrollY")
-        while True:
-            driver.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.END)
+            clipboard.copy(id)
             time.sleep(0.5)
-            afterScrollY = driver.execute_script("return window.scrollY")
-            if beforeScrollY == afterScrollY:
-                break
-            beforeScrollY = afterScrollY
-        time.sleep(0.5)
-        
-        content = driver.find_element(By.ID, "papermain")
-        driver.switch_to.frame(content)      
-        
-        pageNateSize = 0
-        count = 0
-        self.stop = False
-        while True:
+            id_field = driver.find_element(By.ID,"id")
+            id_field.send_keys(Keys.CONTROL + "v")
+            time.sleep(0.5)
+
+            clipboard.copy(pw)
+            time.sleep(0.5)
+            pw_field = driver.find_element(By.ID,"pw")
+            pw_field.send_keys(Keys.CONTROL + "v")
+            time.sleep(0.5)
             
-            totalFriend = driver.find_element(By.CLASS_NAME, "action2_r").find_element(By.TAG_NAME, "strong").text
+            errorElement = driver.find_element(By.CLASS_NAME,"login_error_wrap").get_attribute("style")
+            try:
+                if errorElement == "display: block" :
             
-            if self.stop == True :
-                driver.quit()
-                self.percent.emit(int(100))
-                break
+                    self.loginError.emit("error_account")  
+                    driver.quit()
+            except NoSuchElementException:
+                pass    
             
-            # print("=---o-------------------------")
-            # print(totalFriend)
-            # print(count)
+            try:
+                driver.find_element(By.CLASS_NAME,"btn_login_wrap").click()
+            except NoSuchElementException:
+                pass
             
-            if int(totalFriend) == count :
-                break
+            try:
+                driver.find_element(By.CLASS_NAME,"btn_upload").find_element(By.TAG_NAME, "a").click()
+            except NoSuchElementException:
+                pass
+            
+            try:
+                while True:
+                    driver.find_element(By.CLASS_NAME,"login_check").find_element(By.CLASS_NAME, "check_row").click()
+                    time.sleep(5)
+                    if driver.find_element(By.CLASS_NAME,"_buddy_dropdown_container") :
+                        break
+            except NoSuchElementException:
+                pass
+            
+            while True :
+                if len( driver.find_elements(By.CLASS_NAME,"menu_my_article")) > 0 :
+                    break
+                time.sleep(0.1)
                 
-            if pageNateSize > 0 :
-                try :  
-                    # print("///////////////////////")
-                    # print(pageNateSize)
-                    # print(page_num)
-                    
-                            
-                    if page_num < 11  :
-                        if pageNateSize == 10 :
-                            pageNateSize = 0
-                        driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[pageNateSize -1].click()
-                    else :
-                        if pageNateSize == 11 :
-                            pageNateSize = 1
-                        driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[pageNateSize].click()
-                    
-                except NoSuchElementException:
-                    pass
-
-            items = driver.find_element(By.CLASS_NAME, "tbl_buddymanage")
-
-            tbody  = items.find_element(By.TAG_NAME, "tbody")
-            itemList  = tbody.find_elements(By.TAG_NAME, "tr")
+            driver.set_window_position(1000000,1000000) 
+            time.sleep(2)
+            
+            driver.find_element(By.CLASS_NAME,"menu_my_article").find_elements(By.TAG_NAME, "a")[2].click()
+            driver.find_element(By.CLASS_NAME,"link_manage_buddy").click()
+            
+            driver.switch_to.window(driver.window_handles[-1])
             
             
-            # print(f"--------------{page_num+1}페이지 이웃찾기 시작-------------")
+            beforeScrollY = driver.execute_script("return window.scrollY")
+            while True:
+                driver.find_element(By.CSS_SELECTOR, "body").send_keys(Keys.END)
+                time.sleep(0.5)
+                afterScrollY = driver.execute_script("return window.scrollY")
+                if beforeScrollY == afterScrollY:
+                    break
+                beforeScrollY = afterScrollY
+            time.sleep(0.5)
             
-            friend_num = 0
+            content = driver.find_element(By.ID, "papermain")
+            driver.switch_to.frame(content)      
             
-            if(len(itemList)==0) :
-                driver.quit()
-                break
-            
-            for element in itemList:
+            pageNateSize = 0
+            count = 0
+            self.stop = False
+            while True:
+                
+                totalFriend = driver.find_element(By.CLASS_NAME, "action2_r").find_element(By.TAG_NAME, "strong").text
+                
                 if self.stop == True :
                     driver.quit()
                     self.percent.emit(int(100))
                     break
                 
-                friend_num += 1
+                # print("=---o-------------------------")
+                # print(totalFriend)
+                # print(count)
                 
-                tempGroupName = ""
-                try :
-                    tempGroupName = element.find_element(By.CLASS_NAME, "ellipsis1").text
-                except:
-                    pass
-                groupName.append(tempGroupName)
-
-                tempFriendCheck = ""
-                try :
-                    tempFriendCheck = "이웃"
-                    if element.find_element(By.CLASS_NAME, "type").find_element(By.CLASS_NAME, "both").text :
-                        tempFriendCheck = "서로이웃"
-                        
-                except:
-                    pass
-                friendCheck.append(tempFriendCheck)
-                
-                tempFriendName = ""
-                try :
-                    tempFriendName = element.find_element(By.CLASS_NAME, "ellipsis2").text
-                except:
-                    pass
-                friendName.append(tempFriendName)
-                
-                tempLastPostTime = ""
-                try :
-                    tempLastPostTime = element.find_elements(By.TAG_NAME, "td")[5].text
-                except:
-                    pass
-                lastPostTime.append(tempLastPostTime)
-                
-                tempFriendDay = ""
-                try :
-                    tempFriendDay = element.find_elements(By.TAG_NAME, "td")[6].text
-                except:
-                    pass
-                friendDay.append(tempFriendDay)
-                
-                # data = tempGroupName + " / " + tempFriendCheck + " / " + tempFriendName + " / " +  tempLastPostTime + " / " + tempFriendDay
-                # print(f"{friend_num} 번째 이웃 : {data}")
-                
-                self.name.emit(f"{page_num+1}페이지 {friend_num}번째 이웃 : {tempFriendName}")   
-
-                currentNum = int(page_num*50) + int(friend_num)
-                
-                self.percent.emit(int(5+(currentNum*95)/int(totalFriend)))
-                
-                time.sleep(0.01)
-                
-                raw_data = {'그룹명' : groupName,
-                        '상태' : friendCheck,
-                        '이웃명' : friendName,
-                        '최근글' : lastPostTime,
-                        '이웃추가일' : friendDay,
-                        }
-
-                data_list = list(zip(raw_data['그룹명'], 
-                        raw_data['상태'], 
-                        raw_data['이웃명'], 
-                        raw_data['최근글'], 
-                        raw_data['이웃추가일']))
-                    
-                self.dataReady.emit(data_list) 
-                count += 1
-
-            page_num += 1
-            pageNateSize += 1
-            time.sleep(1)
-        
-        page = 0
-        while True :
-
-            if self.stop == True :
-                # print("alreaduy----------------------------------------")
-                driver.quit()
-                break
-                
-            if len(self.deleteList) > 0 :
-                if self.stop == True :
-                    driver.quit()
-                    self.percent.emit(int(100))
+                if int(totalFriend) == count :
                     break
-                # print("===============================")
-                # print(self.deleteList)
-                
-                driver.refresh() 
-                content = driver.find_element(By.ID, "papermain")
-                driver.switch_to.frame(content)
-                
-                self.deletePercent.emit(int(10))
-                driver.find_elements(By.CLASS_NAME, "selectbox-box")[2].click()
-                
-                self.deletePercent.emit(int(20))
-                
-                # print(page)
-                if page > 0 :
-                    driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[page -1].click()
-                
-                self.deletePercent.emit(int(30))    
-                items = driver.find_element(By.CLASS_NAME, "tbl_buddymanage")
-                tbody  = items.find_element(By.TAG_NAME, "tbody")
-                index  = tbody.find_elements(By.TAG_NAME, "tr")
-                
-                self.deletePercent.emit(int(50))    
-                if len(self.deleteList) == 1 :
+                    
+                if pageNateSize > 0 :
+                    try :  
+                        # print("///////////////////////")
+                        # print(pageNateSize)
+                        # print(page_num)
                         
-                        # print("11111")
-                        self.deletePercent.emit(int(65))    
-                        for item in index :
-                            
-                            # print("2222")
-                            item_name = item.find_element(By.CLASS_NAME, "ellipsis2").text
-                            
-                            # print(item_name)
-                            
-                            if item_name.strip() == str(self.deleteList[0]).strip() :
                                 
-                                # print("3333")
-                                self.deletePercent.emit(int(80)) 
-                                item.find_element(By.CLASS_NAME, "checkwrap").find_element(By.TAG_NAME, "input").click()
-                                driver.find_element(By.CLASS_NAME, "btn_del").click()
-                                driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
-                                time.sleep(0.5)
-                                self.deleteList.clear()
-                                self.deletePercent.emit(int(100))
-                                # print("4444")
-                                break
-                        page+=1    
+                        if page_num < 11  :
+                            if pageNateSize == 10 :
+                                pageNateSize = 0
+                            driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[pageNateSize -1].click()
+                        else :
+                            if pageNateSize == 11 :
+                                pageNateSize = 1
+                            driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[pageNateSize].click()
                         
+                    except NoSuchElementException:
+                        pass
+
+                items = driver.find_element(By.CLASS_NAME, "tbl_buddymanage")
+
+                tbody  = items.find_element(By.TAG_NAME, "tbody")
+                itemList  = tbody.find_elements(By.TAG_NAME, "tr")
+                
+                
+                # print(f"--------------{page_num+1}페이지 이웃찾기 시작-------------")
+                
+                friend_num = 0
+                
+                if(len(itemList)==0) :
+                    driver.quit()
+                    break
+                
+                for element in itemList:
+                    if self.stop == True :
+                        driver.quit()
+                        self.percent.emit(int(100))
+                        break
                     
-                elif len(self.deleteList) > 1 :
+                    friend_num += 1
                     
-                    while True :
-                        if len (driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")) > 0 :
-                            break
-                        time.sleep(0.005)
+                    tempGroupName = ""
+                    try :
+                        tempGroupName = element.find_element(By.CLASS_NAME, "ellipsis1").text
+                    except:
+                        pass
+                    groupName.append(tempGroupName)
+
+                    tempFriendCheck = ""
+                    try :
+                        tempFriendCheck = "이웃"
+                        if element.find_element(By.CLASS_NAME, "type").find_element(By.CLASS_NAME, "both").text :
+                            tempFriendCheck = "서로이웃"
+                            
+                    except:
+                        pass
+                    friendCheck.append(tempFriendCheck)
+                    
+                    tempFriendName = ""
+                    try :
+                        tempFriendName = element.find_element(By.CLASS_NAME, "ellipsis2").text
+                    except:
+                        pass
+                    friendName.append(tempFriendName)
+                    
+                    tempLastPostTime = ""
+                    try :
+                        tempLastPostTime = element.find_elements(By.TAG_NAME, "td")[5].text
+                    except:
+                        pass
+                    lastPostTime.append(tempLastPostTime)
+                    
+                    tempFriendDay = ""
+                    try :
+                        tempFriendDay = element.find_elements(By.TAG_NAME, "td")[6].text
+                    except:
+                        pass
+                    friendDay.append(tempFriendDay)
+                    
+                    # data = tempGroupName + " / " + tempFriendCheck + " / " + tempFriendName + " / " +  tempLastPostTime + " / " + tempFriendDay
+                    # print(f"{friend_num} 번째 이웃 : {data}")
+                    
+                    self.name.emit(f"{page_num+1}페이지 {friend_num}번째 이웃 : {tempFriendName}")   
+
+                    currentNum = int(page_num*50) + int(friend_num)
+                    
+                    self.percent.emit(int(5+(currentNum*95)/int(totalFriend)))
+                    
+                    time.sleep(0.01)
+                    
+                    raw_data = {'그룹명' : groupName,
+                            '상태' : friendCheck,
+                            '이웃명' : friendName,
+                            '최근글' : lastPostTime,
+                            '이웃추가일' : friendDay,
+                            }
+
+                    data_list = list(zip(raw_data['그룹명'], 
+                            raw_data['상태'], 
+                            raw_data['이웃명'], 
+                            raw_data['최근글'], 
+                            raw_data['이웃추가일']))
                         
-                    checkDrop = driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")[3]
-                    checkDrop.click()
+                    self.dataReady.emit(data_list) 
+                    count += 1
+
+                page_num += 1
+                pageNateSize += 1
+                time.sleep(1)
+            
+            page = 0
+            while True :
+
+                if self.stop == True :
+                    # print("alreaduy----------------------------------------")
+                    driver.quit()
+                    break
+                    
+                if len(self.deleteList) > 0 :
+                    if self.stop == True :
+                        driver.quit()
+                        self.percent.emit(int(100))
+                        break
+                    # print("===============================")
+                    # print(self.deleteList)
+                    
+                    driver.refresh() 
+                    content = driver.find_element(By.ID, "papermain")
+                    driver.switch_to.frame(content)
+                    
+                    self.deletePercent.emit(int(10))
+                    driver.find_elements(By.CLASS_NAME, "selectbox-box")[2].click()
+                    
+                    self.deletePercent.emit(int(20))
+                    
+                    if page > 9 :
+                        page = 0
+                    # print(page)
+                    if page > 0 :
+                        driver.find_element(By.CLASS_NAME,"paginate_re").find_elements(By.TAG_NAME, "a")[page -1].click()
+                    
                     time.sleep(1)
-                    self.deletePercent.emit(int(65))  
+                    self.deletePercent.emit(int(30))    
+                    items = driver.find_element(By.CLASS_NAME, "tbl_buddymanage")
+                    tbody  = items.find_element(By.TAG_NAME, "tbody")
+                    index  = tbody.find_elements(By.TAG_NAME, "tr")
                     
-                    while True:
-                        neigborCount = driver.find_element(By.CLASS_NAME , "action2_r").find_element(By.CLASS_NAME , "fl").text
-                        neigborCount = neigborCount.replace("정렬된 이웃","").replace("명","").replace(" ","").strip()
-                        if int(neigborCount) == 0 :
-                            # print("nonono")
-                            break
+                    self.deletePercent.emit(int(50))    
+                    if len(self.deleteList) == 1 :
+                            
+                            # print("11111")
+                            self.deletePercent.emit(int(65))    
+                            for item in index :
+                                
+                                # print("2222")
+                                item_name = item.find_element(By.CLASS_NAME, "ellipsis2").text
+                                
+                                # print(item_name)
+                                
+                                if item_name.strip() == str(self.deleteList[0]).strip() :
+                                    
+                                    # print("3333")
+                                    self.deletePercent.emit(int(80)) 
+                                    item.find_element(By.CLASS_NAME, "checkwrap").find_element(By.TAG_NAME, "input").click()
+                                    driver.find_element(By.CLASS_NAME, "btn_del").click()
+                                    driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
+                                    time.sleep(0.5)
+                                    self.deleteList.clear()
+                                    self.deletePercent.emit(int(100))
+                                    # print("4444")
+                                    driver.refresh() 
+                                    break
+                            page+=1    
+                            
                         
-                        driver.find_elements(By.CLASS_NAME, "checkAll")[0].click()
-                        time.sleep(1)
-                        driver.find_element(By.CLASS_NAME, "btn_del").click()
-                        time.sleep(1)
-                        driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
-                        self.deletePercent.emit(int(80)) 
-                    
-                    self.deleteList.clear()
-                    self.deletePercent.emit(int(100))
+                    elif len(self.deleteList) > 1 :
+                        
+                        while True :
+                            if len (driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_elements(By.TAG_NAME, "li")) > 0 :
+                                break
+                            time.sleep(0.005)
+                            
+                        self.deletePercent.emit(int(65))  
+                        while True:
+                            
+                            checkDrop = driver.find_elements(By.CLASS_NAME, "selectbox-layer")[2].find_element(By.CLASS_NAME, "selectbox-list").find_element(By.CLASS_NAME, "sel_buddy")
+                            checkDrop.click()
+                            time.sleep(1)
+                            neigborCount = driver.find_element(By.CLASS_NAME , "action2_r").find_element(By.CLASS_NAME , "fl").text
+                            neigborCount = neigborCount.replace("정렬된 이웃","").replace("명","").replace(" ","").strip()
+                         
+                            if int(neigborCount) == 0 :
+                                # print("nonono")
+                                break
+                            time.sleep(1)
+                            driver.find_elements(By.CLASS_NAME, "checkAll")[0].click()
+                            time.sleep(1)
+                            driver.find_element(By.CLASS_NAME, "btn_del").click()
+                            time.sleep(1)
+                            driver.find_elements(By.CLASS_NAME, "btn_2")[1].find_element(By.TAG_NAME, "input").click() 
+                            self.deletePercent.emit(int(80)) 
+                            
+                            neigborCount = driver.find_element(By.CLASS_NAME , "action2_r").find_element(By.CLASS_NAME , "fl").text
+                            neigborCount = neigborCount.replace("정렬된 이웃","").replace("명","").replace(" ","").strip()
+                            if int(neigborCount) == 0 :
+                                # print("nonono")
+                                break
+                            else :
+                                driver.refresh() 
+                                time.sleep(1)
+                                content = driver.find_element(By.ID, "papermain")
+                                time.sleep(0.5)
+                                driver.switch_to.frame(content)
+                                time.sleep(1)
+                                driver.find_elements(By.CLASS_NAME, "selectbox-box")[2].click()
+                                time.sleep(1)
+                        
+                        self.deleteList.clear()
+                        self.deletePercent.emit(int(100))
+        except Exception as e :
+            print(e)
+            traceback.print_exc
+            time.sleep(10000)
+            driver.quit()
                     
                  
+            
                     
             
                 

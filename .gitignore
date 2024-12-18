@@ -32,3 +32,5 @@ controller/__pycache__/findFriend.cpython-312.pyc
 controller/__pycache__/ui_controller.cpython-312.pyc
 view/__pycache__/login_Ui.cpython-312.pyc
 view/__pycache__/main_Ui.cpython-312.pyc
+*.pyc
+*.pyc

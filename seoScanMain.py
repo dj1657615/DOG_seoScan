@@ -272,12 +272,15 @@ class MainWindow(QMainWindow , main_Ui.Ui_MainWindow):
                      if str(row[1]).strip() == self.table.item(rowCount, 2).text() :
                         # print("innnnnnnnnnnn")
                         self.table.removeRow(rowCount)
-                        self.btnAllDelete.hide() 
                         count+=1
                         break
                         
          self.table.repaint()   
          self.result_title.setText(f"이웃 : {len(self.noFriendAllList)} / 전체이웃 : {str(self.table.rowCount())}") 
+         
+         if self.noFriendAllList == 0 :
+            self.btnAllDelete.hide() 
+            
          self.idEdit.setReadOnly(False)
          self.pwEdit.setReadOnly(False)
          self.btnSearchFollower.setDisabled(False)
